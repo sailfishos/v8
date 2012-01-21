@@ -1,0 +1,24 @@
+diff -up v8-3.3.10/src/extensions/experimental/language-matcher.cc.fix v8-3.3.10/src/extensions/experimental/language-matcher.cc
+--- v8-3.3.10/src/extensions/experimental/language-matcher.cc.fix	2011-08-10 12:12:39.257368098 -0400
++++ v8-3.3.10/src/extensions/experimental/language-matcher.cc	2011-08-10 12:12:47.150362828 -0400
+@@ -42,7 +42,7 @@ namespace internal {
+ const unsigned int LanguageMatcher::kLanguageWeight = 75;
+ const unsigned int LanguageMatcher::kScriptWeight = 20;
+ const unsigned int LanguageMatcher::kRegionWeight = 5;
+-const unsigned int LanguageMatcher::kThreshold = 50;
++const int LanguageMatcher::kThreshold = 50;
+ const unsigned int LanguageMatcher::kPositionBonus = 1;
+ const char* const LanguageMatcher::kDefaultLocale = "root";
+ 
+diff -up v8-3.3.10/src/extensions/experimental/language-matcher.h.fix v8-3.3.10/src/extensions/experimental/language-matcher.h
+--- v8-3.3.10/src/extensions/experimental/language-matcher.h.fix	2011-08-10 12:13:15.147621253 -0400
++++ v8-3.3.10/src/extensions/experimental/language-matcher.h	2011-08-10 12:13:24.311742395 -0400
+@@ -76,7 +76,7 @@ class LanguageMatcher {
+   static const unsigned int kRegionWeight;
+ 
+   // LocaleID match score has to be over this number to accept the match.
+-  static const unsigned int kThreshold;
++  static const int kThreshold;
+ 
+   // For breaking ties in priority queue.
+   static const unsigned int kPositionBonus;
