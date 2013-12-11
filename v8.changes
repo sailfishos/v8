@@ -1,3 +1,6 @@
+* Wed Dec 11 2013 Davide Bettio <davide.bettio@ispirata.com> - 3.3.10-4
+- Build with -Wno-unused-local-typedef to fix build on GCC 4.8
+
 * Sat Jan 21 2012 Carsten Munk <carsten.munk@gmail.com> - 3.3.10-4
 - Rebase on Fedora package, align with Mer standards, add MIPS support
 

@@ -34,6 +34,8 @@ Patch1:     v8-3.2.10-always-false.patch
 Patch2:     v8-3.3.10-language-matcher-fix.patch
 # Remove unnecessary shebangs
 Patch3:     v8-2.5.9-shebangs.patch
+# Disable unused-local-typedef warning (-Werror is enabled!!)
+Patch4:     gcc48_fix_wno-unused-local-typedef.patch
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 #ExclusiveArch:    %{ix86} x86_64 %{arm} mipsel
 BuildRequires:    scons, readline-devel, libicu-devel
@@ -57,6 +59,7 @@ Development headers and libraries for v8.
 %patch1 -p1 -b .always-false
 %patch2 -p1 -b .fix
 %patch3 -p1 -b .shebang
+%patch4 -p2
 
 # -fno-strict-aliasing is needed with gcc 4.4 to get past some ugly code
 PARSED_OPT_FLAGS=`echo \'$RPM_OPT_FLAGS -fPIC -fno-strict-aliasing -Wno-unused-parameter -Wno-unused-but-set-variable\'| sed "s/ /',/g" | sed "s/',/', '/g"`
