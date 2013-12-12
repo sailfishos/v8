@@ -59,7 +59,7 @@ Development headers and libraries for v8.
 %patch1 -p1 -b .always-false
 %patch2 -p1 -b .fix
 %patch3 -p1 -b .shebang
-%patch4 -p2
+%patch4 -p1
 
 # -fno-strict-aliasing is needed with gcc 4.4 to get past some ugly code
 PARSED_OPT_FLAGS=`echo \'$RPM_OPT_FLAGS -fPIC -fno-strict-aliasing -Wno-unused-parameter -Wno-unused-but-set-variable\'| sed "s/ /',/g" | sed "s/',/', '/g"`
@@ -75,7 +75,7 @@ find . \( -name \*.cc -o -name \*.h -o -name \*.py \) -a -executable \
 
 %build
 export GCC_VERSION="44"
-scons library=shared snapshots=on \
+scons library=shared snapshots=on werrno=no \
 %ifarch x86_64
 arch=x64 \
 %endif
