@@ -1,3 +1,12 @@
+* Sun Dec 15 2013 Dario Freddi <dario.freddi@ispirata.com> - 3.20.0.1-1
+- Update to 3.20.0.1 following OpenSUSE's 13.1 release
+- Remove deprecated patches
+- Add compile fix for GCC 4.8
+- Switch buildsystem to gyp. scons is no longer needed
+- Enable gdbjit wherever supported
+- Add a bin package to include v8's executables
+- Handle ARM's hardfp and NEON in supported architectures
+
 * Wed Dec 11 2013 Davide Bettio <davide.bettio@ispirata.com> - 3.3.10-4
 - Build with -Wno-unused-local-typedef to fix build on GCC 4.8
 
