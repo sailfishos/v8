@@ -1,3 +1,10 @@
+* Sun Mar 16 2014 Oleg Girko <oleg.girko@jolla.com> - 3.25.11-1
+- Update to 3.25.11 which supports aarch64
+- Add aarch64 support
+- Invoke gyp explicitly: Makefile doesn't pass use_system_icu option to gyp
+- Don't require gdb for build if gdbjit is not enabled
+- Install target-specific private headers, not x64 ones
+
 * Sun Dec 15 2013 Dario Freddi <dario.freddi@ispirata.com> - 3.20.0.1-1
 - Update to 3.20.0.1 following OpenSUSE's 13.1 release
 - Remove deprecated patches

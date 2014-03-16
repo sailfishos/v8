@@ -1,22 +1,20 @@
-Index: build/common.gypi
+Index: build/toolchain.gypi
 ===================================================================
---- build/common.gypi	(revision 11639)
-+++ build/common.gypi	(working copy)
-@@ -320,7 +320,8 @@
-           }],
-           ['OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="netbsd"', {
+--- build/toolchain.gypi
++++ build/toolchain.gypi
+@@ -519,6 +519,7 @@
+             OS=="qnx"', {
              'cflags': [ '-Wall', '<(werror)', '-W', '-Wno-unused-parameter',
--                        '-Wnon-virtual-dtor', '-Woverloaded-virtual' ],
-+                        '-Wnon-virtual-dtor', '-Woverloaded-virtual',
-+                        '-Wno-unused-local-typedefs', '-Wno-aggressive-loop-optimizations' ],
-           }],
-           ['OS=="linux" and v8_enable_backtrace==1', {
-             # Support for backtrace_symbols.
+                         '-Wnon-virtual-dtor', '-Woverloaded-virtual',
++                        '-Wno-unused-local-typedefs', '-Wno-aggressive-loop-optimizations',
+                         '<(wno_array_bounds)',
+                       ],
+             'conditions': [
 Index: build/standalone.gypi
 ===================================================================
---- build/standalone.gypi	(revision 11639)
-+++ build/standalone.gypi	(working copy)
-@@ -98,6 +98,7 @@
+--- build/standalone.gypi
++++ build/standalone.gypi
+@@ -173,6 +173,7 @@
         or OS=="netbsd"', {
        'target_defaults': {
          'cflags': [ '-Wall', '<(werror)', '-W', '-Wno-unused-parameter',
