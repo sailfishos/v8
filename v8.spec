@@ -1,18 +1,26 @@
+%ifarch mips aarch64
+  %bcond_with gdbjit
+%else
+  %bcond_without gdbjit
+%endif
+
 Name:           v8
-Version:        3.20.0.1
+Version:        3.25.11
 Release:        1%{?dist}
 Summary:        JavaScript Engine
 License:        BSD-3-Clause
 Group:          System/Libraries
 Url:            http://code.google.com/p/v8
-Source0:        %{name}.%{version}.tar.lzma
+Source0:        http://gsdview.appspot.com/chromium-browser-official/%{name}-%{version}.tar.bz2
 Patch1:         fix-gcc48.patch
 BuildRequires:  gcc-c++
 BuildRequires:  lzma
 BuildRequires:  python-devel
 BuildRequires:  readline-devel
 BuildRequires:  libicu-devel
+%if %{with gdbjit}
 BuildRequires:  gdb
+%endif
 
 %global somajor `echo %{version} | cut -f1 -d'.'`
 %global sominor `echo %{version} | cut -f2 -d'.'`
@@ -30,6 +38,9 @@ BuildRequires:  gdb
 %endif
 %ifarch mipsel
 %global target mipsel
+%endif
+%ifarch aarch64
+%global target a64
 %endif
 
 %description
@@ -64,10 +75,7 @@ Requires:       %{name}-devel = %{version}
 Special Private Development headers for v8.
 
 %prep
-rm -rf %{name}
-lzma -cd %{SOURCE0} | tar xf -
-
-%setup -D -T -n %{name}
+%setup -q
 %patch1 -p0
 
 %build
@@ -80,28 +88,38 @@ export ICU_LINK_FLAGS=`pkg-config --libs-only-l icu-i18n`
 %ifarch armv6hl armv7hl armv7tnhl
 MAKE_EXTRA_FLAGS+=hardfp=on
 %endif
-make %{target}.release %{?_smp_mflags} \
-     console=readline \
-     library=shared \
-     snapshots=on \
-     use_system_icu=1 \
-%ifnarch mipsel
-     gdbjit=on \
+
+myconf+=" -Duse_system_icu=1
+          -Dcomponent=shared_library
+          -Dsoname_version=%{somajor}
+          -Dconsole=readline"
+
+%if %{with gdbjit}
+myconf+=" -Dv8_enable_gdbjit=on"
 %endif
+
 %ifarch armv7tnhl
-     arm_neon=1 \
-     arm_fpu=neon \
+myconf+=" -Darm_neon=1 -Darm_fpu=neon"
 %endif
-     soname_version=%{somajor} \
-     $MAKE_EXTRA_FLAGS
+
+myconf+=" -Dv8_target_arch=%{target}"
+
+./build/gyp_v8 -f make build/all.gyp --depth=. -S.%{target}.release $myconf
+
+cd out
+make -f Makefile.%{target}.release \
+     builddir=%{_builddir}/%{buildsubdir}/out/%{target}.release \
+     snapshots=on \
+     $MAKE_EXTRA_FLAGS \
+     BUILDTYPE=Release V=1
 
 %install
-mkdir -p %{buildroot}%{_includedir}/v8/x64
+mkdir -p %{buildroot}%{_includedir}/v8/%{target}
 mkdir -p %{buildroot}%{_libdir}
 install -p include/*.h %{buildroot}%{_includedir}
 
 install -p src/*.h %{buildroot}%{_includedir}/v8
-install -p src/x64/*.h %{buildroot}%{_includedir}/v8/x64
+install -p src/%{target}/*.h %{buildroot}%{_includedir}/v8/%{target}
 
 install -p out/%{target}.release/lib.target/libv8.so* %{buildroot}%{_libdir}
 mkdir -p %{buildroot}%{_bindir}
@@ -109,7 +127,6 @@ install -p -m0755 out/%{target}.release/d8 %{buildroot}%{_bindir}
 
 # Various binaries
 mkdir -p %{buildroot}%{_libexecdir}/v8
-install -p -m0755 out/%{target}.release/preparser %{buildroot}%{_libexecdir}/v8
 install -p -m0755 out/%{target}.release/cctest %{buildroot}%{_libexecdir}/v8
 install -p -m0755 out/%{target}.release/shell %{buildroot}%{_libexecdir}/v8
 install -p -m0755 out/%{target}.release/lineprocessor %{buildroot}%{_libexecdir}/v8
